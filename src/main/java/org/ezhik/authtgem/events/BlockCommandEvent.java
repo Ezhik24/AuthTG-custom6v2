@@ -23,7 +23,7 @@ public class BlockCommandEvent implements Listener {
                player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("command_block")));
            }
         }
-        if (event.getMessage().startsWith("/ban")) {
+        if (event.getMessage().startsWith("/ban") && !FreezerEvent.isFreeze(player)) {
             if (player.hasPermission("ab.ban.perma") && !FreezerEvent.isFreeze(player)) {
                 String[] args = event.getMessage().split(" ");
                 if (args.length == 4) {

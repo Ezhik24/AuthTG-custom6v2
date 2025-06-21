@@ -35,9 +35,7 @@ public final class AuthTGEM extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinAnotherEvent(), this);
         Handler handler = new Handler();
         handler.runTaskTimer(this,0,1);
-        getCommand("mcbc").setExecutor(new MCbcCMD());
         getCommand("setbypass").setExecutor(new SetBypass());
-        getCommand("unregister").setExecutor(new UnRegisterCMD());
         bot = new BotTelegram();
         if (bot.getBotToken() == "changeme" && bot.getBotUsername() == "changeme") {
             System.out.println("Please set your bot token and username in config.yml");

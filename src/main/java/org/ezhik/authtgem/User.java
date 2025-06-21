@@ -156,12 +156,6 @@ public class User {
         Handler.kick(this.player.getName(), AuthTGEM.messageTG.get("kick_account_inTG"));
     }
 
-    public static void sendBroadcastMessage(String message) {
-        for (User user : User.getUniclUsers()) {
-            AuthTGEM.bot.sendMessage(user.chatid, AuthTGEM.messageTG.get("sendMessageBroadCast") + message);
-        }
-    }
-
     public static List<String> getPlayerNames(Long chatid) {
         List<String> names = new ArrayList<>();
         for (User user : User.getUserList()) {
@@ -191,31 +185,10 @@ public class User {
         }
         return null;
     }
-
-    public static List<User> getUniclUsers() {
-        List<User> users = new ArrayList<>();
-        List<Long> chatIds = new ArrayList<>();
-        for (User user : User.getUserList()) {
-            if (user != null) {
-                if (!chatIds.contains(user.chatid)) {
-                    chatIds.add(user.chatid);
-                    users.add(user);
-                }
-            }
-        }
-        return users;
-    }
     public static String findPlayerTG(String playername) {
         File[] files = new File("plugins/AuthTG/users/").listFiles();
         for (File file : files) {
-            YamlConfiguration userconf = new YamlConfiguration();
-            try {
-                userconf.load(file);
-            } catch (IOException e) {
-                System.out.println("Error loading config file: " + e);
-            } catch (InvalidConfigurationException e) {
-                System.out.println("Error parsing config file: " + e);
-            }
+            YamlConfiguration userconf = YamlConfiguration.loadConfiguration(file);
             if (userconf.getString("playername").equals(playername)) {
                 return userconf.get("username").toString();
             }

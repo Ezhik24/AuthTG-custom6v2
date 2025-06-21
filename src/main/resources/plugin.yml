@@ -6,13 +6,5 @@ Author: 'Ezhik24'
 website: 'https://t.me/ezhichek11'
 
 commands:
-  unregister:
-    description: 'Удалить аккаунт'
-    aliases:
-      - 'unreg'
   setbypass:
     description: 'Bypass for Player'
-  tgbc:
-    description: 'Telegramm Broadcast Command'
-  mcbc:
-    description: 'Minecraft Broadcast Command'
