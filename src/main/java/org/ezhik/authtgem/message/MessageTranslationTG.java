@@ -1,10 +1,7 @@
 package org.ezhik.authtgem.message;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.ezhik.authtgem.User;
 
 import java.io.File;

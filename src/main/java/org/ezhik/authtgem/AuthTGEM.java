@@ -9,8 +9,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 
-import java.io.Console;
-
 public final class AuthTGEM extends JavaPlugin {
     public static BotTelegram bot;
     public static MessageTranslationTG messageTG;

@@ -1,17 +1,11 @@
 package org.ezhik.authtgem.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
-import org.checkerframework.checker.units.qual.A;
 import org.ezhik.authtgem.AuthTGEM;
-
-import java.io.File;
 
 public class BlockCommandEvent implements Listener {
     @EventHandler

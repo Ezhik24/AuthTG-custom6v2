@@ -32,7 +32,6 @@ public class User {
     public Player player = null;
     public  UUID uuid = null;
     public String playername = "";
-    public List<String> friends = new ArrayList<>();
 
     private User(UUID uuid) {
         YamlConfiguration userconfig = new YamlConfiguration();
@@ -49,7 +48,6 @@ public class User {
             this.twofactor = userconfig.getBoolean("twofactor");
             this.player = Bukkit.getPlayer(uuid);
             this.active = userconfig.getBoolean("active");
-            this.friends = userconfig.getStringList("friends");
         } catch (FileNotFoundException e) {
             System.out.println("Error file not found: " + e);
         } catch (IOException e) {

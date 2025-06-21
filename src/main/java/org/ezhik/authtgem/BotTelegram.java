@@ -7,8 +7,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ezhik.authtgem.events.FreezerEvent;
 import org.ezhik.authtgem.events.MuterEvent;
-import org.geysermc.api.Geyser;
-import org.geysermc.api.GeyserApiBase;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
