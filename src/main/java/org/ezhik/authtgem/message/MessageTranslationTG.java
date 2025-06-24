@@ -16,7 +16,6 @@ public class MessageTranslationTG extends LinkedHashMap<String, String> {
         YamlConfiguration messageconfig = new YamlConfiguration();
         try {
             messageconfig.load(configfile);
-
         } catch (FileNotFoundException e) {
             this.put("account_choose", "Выберите игрока");
             this.put("code_account_activated", "Ваш аккаунт успешно активирован!");

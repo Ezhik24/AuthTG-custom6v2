@@ -79,11 +79,9 @@ public class BotTelegram extends TelegramLongPollingBot {
                 this.deleteMessage(update.getMessage());
             } else {
                 if (!bedrockPlayer.isEmpty()) {
-                    for (Map.Entry<UUID,String> map : bedrockPlayer.entrySet()) {
-                        UUID uuid = map.getKey();
-                        String key = map.getValue();
-                        if (update.getMessage().getText().toString().equals(key)) {
-                            User.register(update.getMessage(),uuid);
+                    for (UUID map : bedrockPlayer.keySet()) {
+                        if (update.getMessage().getText().toString().equals(bedrockPlayer.get(map))) {
+                            User.register(update.getMessage(),map);
                             this.sendMessage(update.getMessage().getChatId() ,AuthTGEM.messageTG.get("code_account_activated_auth"));
                         }
                     }
