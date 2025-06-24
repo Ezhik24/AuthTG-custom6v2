@@ -96,10 +96,6 @@ public class User {
         p.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("code_account_activated")));
     }
 
-    public void sendMessage(String message) {
-        AuthTGEM.bot.sendMessage(this.chatid, AuthTGEM.messageTG.getPlayerNameSM(this) + message);
-    }
-
     public static List<User> getUserList(){
         List<User> users = new ArrayList<>();
         File folder = new File("plugins/AuthTG/users");
@@ -116,32 +112,6 @@ public class User {
         return users;
     }
 
-    public void sendLoginAccepted(String message) {
-        InlineKeyboardMarkup keyb = new InlineKeyboardMarkup();
-        List<InlineKeyboardButton> colkeyb = new ArrayList<>();
-        InlineKeyboardButton yesbtn = new InlineKeyboardButton();
-        yesbtn.setText(AuthTGEM.messageTG.get("login_intg_yes"));
-        yesbtn.setCallbackData("ys"+this.player.getName());
-        InlineKeyboardButton nobtn = new InlineKeyboardButton();
-        nobtn.setText(AuthTGEM.messageTG.get("login_intg_not"));
-        nobtn.setCallbackData("no"+this.player.getName());
-        colkeyb.add(yesbtn);
-        colkeyb.add(nobtn);
-        List<List<InlineKeyboardButton>>keyboard = new ArrayList<>();
-        keyboard.add(colkeyb);
-        keyb.setKeyboard(keyboard);
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(this.chatid);
-        sendMessage.setText(message);
-        sendMessage.setReplyMarkup(keyb);
-        try {
-            AuthTGEM.bot.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            System.out.println("Error sending message: " + e);
-        }
-
-    }
-
     public static User getUser(UUID uuid) {
         User user = new User(uuid);
         if (user.active) {
@@ -150,39 +120,18 @@ public class User {
         else return null;
     }
 
-    public void kick(){
-        Handler.kick(this.player.getName(), AuthTGEM.messageTG.get("kick_account_inTG"));
-    }
-
     public static List<String> getPlayerNames(Long chatid) {
         List<String> names = new ArrayList<>();
         for (User user : User.getUserList()) {
-            if (user != null)
+            if (user != null) {
                 if (user.chatid.equals(chatid)) {
                     names.add(user.playername);
                 }
+            }
         }
         return names;
     }
 
-    public static User getOnlineUser(Long chatid) {
-        if (BotTelegram.curentplayer.containsKey(chatid.toString())) {
-            Player player = Bukkit.getPlayer(BotTelegram.curentplayer.get(chatid.toString()));
-            if (player != null) {
-                return User.getUser(player.getUniqueId());
-            }
-        }
-        List<String> players = getPlayerNames(chatid);
-        for (User user : getUserList()){
-           if(user.player != null){
-               if (players.contains(user.player.getName())){
-                   BotTelegram.curentplayer.put(chatid.toString(), user.playername);
-                   return user;
-               }
-           }
-        }
-        return null;
-    }
     public static String findPlayerTG(String playername) {
         File[] files = new File("plugins/AuthTG/users/").listFiles();
         for (File file : files) {

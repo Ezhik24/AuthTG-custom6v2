@@ -26,13 +26,9 @@ public class MessageTranslationTG extends LinkedHashMap<String, String> {
             this.put("code_account_activated", "Ваш аккаунт успешно активирован!");
             this.put("code_account_activated_auth", "[Бот] Ваш аккаунт успешно активирован!");
             this.put("login_who_entered","[Бот] Это вы вошли в игру?");
-            this.put("kick_account_inTG", "Владелец кикнул аккаунт через телеграмм");
-            this.put("kickme_player_notfound","[Бот] Пользователь не зарегистрирован или он не в игре");
-            this.put("kickme_kick_succes", " Вы успешно кикнули свой аккаунт через телеграми!");
             this.put("account_already_tgasign", "[Бот] Вы уже привязывали эту учетную запись");
             this.put("account_already_tgasign_round", "[Бот] Эта учетная запись уже привязана к другой учетной записи Телегримма");
             this.put("acc_choose","[Бот] Выбран игрок {PLAYER}");
-            this.put("user_login", "Ваш аккаунт вошёл в игру");
             File newconfigfile = new File("plugins/AuthTG/messages/messageTG_RU.yml");
             YamlConfiguration newmessageconfig = new YamlConfiguration();
             for (String key : this.keySet()) {

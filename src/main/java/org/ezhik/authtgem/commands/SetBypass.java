@@ -30,7 +30,7 @@ public class SetBypass implements CommandExecutor {
         YamlConfiguration userconfig = YamlConfiguration.loadConfiguration(file);
         userconfig.set("bypass", true);
         if (!file.exists()) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("setbypass_player_approve")));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("setbypass_player_approve")));
         try {
             userconfig.save(file);
         } catch (IOException e) {

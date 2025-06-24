@@ -86,14 +86,6 @@ public class BotTelegram extends TelegramLongPollingBot {
                         this.sendMessage(update.getMessage().getChatId(), "[Бот] Команда введена неверно. Введите /find [никнейм]");
                     }
                 }
-                if (update.getMessage().getText().toString().equals("/kickme")) {
-                    User user = User.getOnlineUser(update.getMessage().getChatId());
-                    if (user != null) {
-                        user.kick();
-                        user.sendMessage(AuthTGEM.messageTG.get("kickme_kick_succes"));
-                    } else
-                        this.sendMessage(update.getMessage().getChatId(), AuthTGEM.messageTG.get("kickme_player_notfound"));
-                }
                 if (update.getMessage().getText().toString().equals("/accounts")) {
                     this.chosePlayer(update.getMessage().getChatId());
                 }

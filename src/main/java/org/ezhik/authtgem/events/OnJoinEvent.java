@@ -26,12 +26,7 @@ public class OnJoinEvent implements Listener {
                 String code = User.generateConfirmationCode();
                 Handler.kick(p.getName(), "Напишите боту: @BotFather, и введите код: " + code);
                 BotTelegram.bedrockPlayer.put(p.getUniqueId(), code);
-            } else {
-                user.sendLoginAccepted("Это вы вошли в игру?");
             }
-        }
-        if (user != null) {
-            user.sendMessage(AuthTGEM.messageTG.get("user_login"));
         }
     }
 }
