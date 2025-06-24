@@ -1,17 +1,10 @@
 package org.ezhik.authtgem;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.ezhik.authtgem.events.FreezerEvent;
-import org.ezhik.authtgem.events.MuterEvent;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 import java.io.File;
@@ -69,7 +62,6 @@ public class User {
     }
 
     public static void register(Message message, UUID uuid) {
-        Player p = Bukkit.getPlayer(uuid);
         YamlConfiguration userconfig = new YamlConfiguration();
         File file = new File("plugins/AuthTG/users/" + uuid + ".yml");
         try {
@@ -90,10 +82,6 @@ public class User {
         } catch (IOException e) {
             System.out.println("Error saving config file: " + e);
         }
-        FreezerEvent.unfreezeplayer(p.getName());
-        MuterEvent.unmute(p.getName());
-        p.resetTitle();
-        p.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("code_account_activated")));
     }
 
     public static List<User> getUserList(){

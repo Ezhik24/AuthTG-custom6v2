@@ -18,8 +18,6 @@ public final class AuthTGEM extends JavaPlugin {
     public void onEnable() {
         messageTG = new MessageTranslationTG();
         messageMC = new MessageTranslationMC();
-        System.out.println("[AuthTG] Пожалуйста,подпишитесь на мой телеграмм канал https://t.me/ezhichek11");
-        System.out.println("[AuthTG] Please,subscribe for my telegram channel https://t.me/ezhichek11");
         System.out.println("[AuthTG] Плагин включен!");
         System.out.println("[AuthTG] Plugin enabled!");
         Bukkit.getServer().getPluginManager().registerEvents(new FreezerEvent(), this);
@@ -51,8 +49,6 @@ public final class AuthTGEM extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println("[AuthTG] Пожалуйста,подпишитесь на мой телеграмм канал https://t.me/ezhichek11");
-        System.out.println("[AuthTG] Please,subcribe for my telegram channel https://t.me/ezhichek11");
         System.out.println("[AuthTG] Плагин выключен!");
         System.out.println("[AuthTG] Plugin disabled!");
     }

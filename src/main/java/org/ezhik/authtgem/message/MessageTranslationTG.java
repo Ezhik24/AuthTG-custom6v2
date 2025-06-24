@@ -18,10 +18,6 @@ public class MessageTranslationTG extends LinkedHashMap<String, String> {
             messageconfig.load(configfile);
 
         } catch (FileNotFoundException e) {
-            this.put("sendMessage_prefix", "[Бот@" + "{PLAYER}" + "] ");
-            this.put("sendMessageBroadCast", "[Бот] ");
-            this.put("login_intg_yes", "Да");
-            this.put("login_intg_not", "Нет");
             this.put("account_choose", "Выберите игрока");
             this.put("code_account_activated", "Ваш аккаунт успешно активирован!");
             this.put("code_account_activated_auth", "[Бот] Ваш аккаунт успешно активирован!");

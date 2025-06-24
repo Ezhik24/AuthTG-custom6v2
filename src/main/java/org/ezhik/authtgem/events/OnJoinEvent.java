@@ -21,9 +21,9 @@ public class OnJoinEvent implements Listener {
         File file = new File("plugins/AuthTG/users/" + p.getUniqueId() + ".yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         if (AuthTGEM.bot.authNecessarily && !config.getBoolean("bypass")) {
-            FreezerEvent.freezeplayer(p.getName());
             if (user == null) {
                 String code = User.generateConfirmationCode();
+                if (BotTelegram.bedrockPlayer.containsKey(p.getUniqueId())) BotTelegram.bedrockPlayer.remove(p.getUniqueId());
                 Handler.kick(p.getName(), "Напишите боту: @BotFather, и введите код: " + code);
                 BotTelegram.bedrockPlayer.put(p.getUniqueId(), code);
             }

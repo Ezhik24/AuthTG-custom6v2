@@ -21,14 +21,8 @@ public class MessageTranslationMC extends LinkedHashMap<String, String> {
             this.put("joinAnotherLocate", "&c&lКто-то уже играет с этого никнейма...");
             this.put("setbypass_player_noperm", "&f&l[&b&lMT&f&l] &c&lУ вас нет доступа");
             this.put("setbypass_player_wrongcmd", "&f&l[&b&lMT&f&l] &c&lКоманда введена неверна,введите: /setbypass <ник>");
-            this.put("setbypass_console_wrongcmd", "[AuthTG] Команда введена неверна,введите: /setbypass <ник>");
             this.put("setbypass_player_approve", "&f&l[&b&lMT&f&l] &aДанный игрок не зарегистрирован,если вы действительно хотите выдать bypass введите команду еще раз");
-            this.put("setbypass_console_approve", "[AuthTG] Данный игрок не зарегистрирован,если вы действительно хотите выдать bypass введите команду еще раз");
             this.put("setbypass_player_success", "&f&l[&b&lMT&f&l] &aУспешно!");
-            this.put("setbypass_console_success", "Успешно");
-            this.put("ban", "[Бот] На сервере было выдан бан {BR} Игрок: {PLAYER} {BR} Причина: {REASON} {BR} Длительность: {TIME}");
-            this.put("mute", "[Бот] На сервере было выдан мут {BR} Игрок: {PLAYER} {BR} Причина: {REASON} {BR} Длительность: {TIME}");
-            this.put("warn", "[Бот] На сервере было выдан варн {BR} Игрок: {PLAYER} {BR} Причина: {REASON} {BR} Длительность: {TIME}");
             File newconfigfile = new File("plugins/AuthTG/messages/messageMC_RU.yml");
             YamlConfiguration newmessageconfig = new YamlConfiguration();
             for (String key : this.keySet()) {
