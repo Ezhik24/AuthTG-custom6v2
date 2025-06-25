@@ -61,13 +61,16 @@ public class BotTelegram extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
+            User.setUserMessage(update);
             if (update.getMessage().getText().toString().startsWith("/")) {
                 if (update.getMessage().getText().toString().startsWith("/find")) {
                     String[] args = update.getMessage().getText().toString().split(" ");
                     if (args.length == 2) {
-                        String username = User.findPlayerTG(args[1]);
-                        if (username != null) {
-                            this.sendMessage(update.getMessage().getChatId(), "[Бот] Найден ТГ аккаунт по нику " + args[1] + ": @" + username);
+                        YamlConfiguration config = User.findPlayerTG(args[1]);
+                        if (config != null) {
+                            this.sendMessage(update.getMessage().getChatId(), "[Бот] Найдено по вашему запросу: \nНикнейм: " + config.getString("playername") + "\nUserName: " + config.getString("username") + "\nFirstname: " + config.getString("firstname"));
+                        } else {
+                            this.sendMessage(update.getMessage().getChatId(), "[Бот] Не найдено ничего по запросу " + args[1]);
                         }
                     } else {
                         this.sendMessage(update.getMessage().getChatId(), "[Бот] Команда введена неверно. Введите /find [никнейм]");
@@ -89,6 +92,7 @@ public class BotTelegram extends TelegramLongPollingBot {
             }
         }
         if (update.hasCallbackQuery()) {
+            User.setUserCallback(update);
             if (update.getCallbackQuery().getData().toString().startsWith("acc")) {
                 String playername = update.getCallbackQuery().getData().toString().replace("acc", "");
                 curentplayer.put(update.getCallbackQuery().getMessage().getChatId().toString(), playername);
@@ -121,7 +125,7 @@ public class BotTelegram extends TelegramLongPollingBot {
 
     public void chosePlayer(Long chatID) {
         InlineKeyboardMarkup players = new InlineKeyboardMarkup();
-        List<String> playernames = User.getPlayerNames(chatID);
+        List<String> playernames = User.getUserList(chatID);
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         for (String name : playernames) {
             List<InlineKeyboardButton> colkeyb = new ArrayList<>();

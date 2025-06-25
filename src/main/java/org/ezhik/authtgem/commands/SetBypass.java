@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ezhik.authtgem.AuthTGEM;
@@ -31,12 +30,12 @@ public class SetBypass implements CommandExecutor {
         userconfig.set("bypass", true);
         if (!file.exists()) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("setbypass_player_approve")));
-        try {
-            userconfig.save(file);
-        } catch (IOException e) {
-            System.out.println("Error saving file " + e);
-        }
-        return false;
+            try {
+                userconfig.save(file);
+            } catch (IOException e) {
+                System.out.println("Error saving file " + e);
+            }
+            return false;
         }
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',AuthTGEM.messageMC.get("setbypass_player_success")));
         try {

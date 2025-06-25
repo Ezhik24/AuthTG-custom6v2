@@ -8,3 +8,5 @@ website: 'https://t.me/ezhichek11'
 commands:
   setbypass:
     description: 'Bypass for Player'
+  link:
+    description: 'Link your TG account'

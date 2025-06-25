@@ -1,10 +1,12 @@
 package org.ezhik.authtgem;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 
 import java.io.File;
@@ -21,7 +23,6 @@ public class User {
     public String firstname = null;
     public String lastname = null;
     public boolean active = false;
-    public boolean twofactor = false;
     public Player player = null;
     public  UUID uuid = null;
     public String playername = "";
@@ -38,7 +39,6 @@ public class User {
             this.username = userconfig.getString("username");
             this.firstname = userconfig.getString("firstname");
             this.lastname = userconfig.getString("lastname");
-            this.twofactor = userconfig.getBoolean("twofactor");
             this.player = Bukkit.getPlayer(uuid);
             this.active = userconfig.getBoolean("active");
         } catch (FileNotFoundException e) {
@@ -62,21 +62,15 @@ public class User {
     }
 
     public static void register(Message message, UUID uuid) {
-        YamlConfiguration userconfig = new YamlConfiguration();
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
         File file = new File("plugins/AuthTG/users/" + uuid + ".yml");
-        try {
-            userconfig.load(file);
-        } catch (IOException e) {
-            System.out.println("Error loading config file: " + e);
-        } catch (InvalidConfigurationException e) {
-            System.out.println("Error parsing config file: " + e);
-        }
+        YamlConfiguration userconfig = YamlConfiguration.loadConfiguration(file);
+        userconfig.set("playername", player.getName());
         userconfig.set("ChatID", message.getChatId());
         userconfig.set("username", message.getChat().getUserName());
         userconfig.set("firstname", message.getChat().getFirstName());
         userconfig.set("lastname", message.getChat().getLastName());
         userconfig.set("active", true);
-        userconfig.set("twofactor", false);
         try {
             userconfig.save(file);
         } catch (IOException e) {
@@ -84,20 +78,18 @@ public class User {
         }
     }
 
-    public static List<User> getUserList(){
-        List<User> users = new ArrayList<>();
-        File folder = new File("plugins/AuthTG/users");
-        File[] listOfFiles = folder.listFiles();
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                UUID uuid = UUID.fromString(file.getName().replace(".yml", ""));
-                User user = new User(uuid);
-                if (user.active) {
-                    users.add(user);
+    public static List<String> getUserList(Long chatid) {
+        List<String> names = new ArrayList<>();
+        File[] folder = new File("plugins/AuthTG/users/").listFiles();
+        for (File file : folder) {
+            User user = User.getUser(UUID.fromString(file.getName().replace(".yml", "")));
+            if (user != null) {
+                if (user.chatid.equals(chatid)) {
+                    names.add(user.playername);
                 }
             }
         }
-        return users;
+        return names;
     }
 
     public static User getUser(UUID uuid) {
@@ -108,26 +100,57 @@ public class User {
         else return null;
     }
 
-    public static List<String> getPlayerNames(Long chatid) {
-        List<String> names = new ArrayList<>();
-        for (User user : User.getUserList()) {
-            if (user != null) {
-                if (user.chatid.equals(chatid)) {
-                    names.add(user.playername);
-                }
-            }
-        }
-        return names;
-    }
-
-    public static String findPlayerTG(String playername) {
+    public static YamlConfiguration findPlayerTG(String arg) {
         File[] files = new File("plugins/AuthTG/users/").listFiles();
         for (File file : files) {
             YamlConfiguration userconf = YamlConfiguration.loadConfiguration(file);
-            if (userconf.getString("playername").equals(playername)) {
-                return userconf.get("username").toString();
-            }
+            if (userconf.getString("playername").equals(arg)) return userconf;
+            if (userconf.getString("username").equals(arg)) return userconf;
+            if (userconf.getString("firstname").equals(arg)) return userconf;
         }
         return null;
+    }
+
+    public static void setUserMessage(Update update) {
+        File[] files = new File("plugins/AuthTG/users/").listFiles();
+        for (File file : files) {
+            YamlConfiguration userconf = YamlConfiguration.loadConfiguration(file);
+            if (update.getMessage().getChatId().equals(userconf.getLong("ChatID"))) {
+                if (update.getMessage().getFrom().getUserName() != null && update.getMessage().getFrom().getLastName() != null && update.getMessage().getFrom().getFirstName() != null) {
+                    if (!update.getMessage().getFrom().getUserName().equals(userconf.getString("username")))
+                        userconf.set("username", update.getMessage().getFrom().getUserName());
+                    if (!update.getMessage().getFrom().getFirstName().equals(userconf.getString("firstname")))
+                        userconf.set("firstname", update.getMessage().getFrom().getFirstName());
+                    if (!update.getMessage().getFrom().getLastName().equals(userconf.getString("lastname")))
+                        userconf.set("lastname", update.getMessage().getFrom().getLastName());
+                }
+                try {
+                    userconf.save(file);
+                } catch (IOException e) {
+                    System.out.println("Error saving config file: " + e);
+                }
+            }
+        }
+    }
+    public static void setUserCallback(Update update) {
+        File[] files = new File("plugins/AuthTG/users/").listFiles();
+        for (File file : files) {
+            YamlConfiguration userconf = YamlConfiguration.loadConfiguration(file);
+            if (update.getCallbackQuery().getMessage().getChatId().equals(userconf.getLong("ChatID"))) {
+                if (update.getMessage().getFrom().getUserName() != null && update.getMessage().getFrom().getLastName() != null && update.getMessage().getFrom().getFirstName() != null) {
+                    if (!update.getCallbackQuery().getMessage().getFrom().getUserName().equals(userconf.getString("username")))
+                        userconf.set("username", update.getCallbackQuery().getMessage().getFrom().getUserName());
+                    if (!update.getCallbackQuery().getMessage().getFrom().getFirstName().equals(userconf.getString("firstname")))
+                        userconf.set("firstname", update.getCallbackQuery().getMessage().getFrom().getFirstName());
+                    if (!update.getCallbackQuery().getMessage().getFrom().getLastName().equals(userconf.getString("lastname")))
+                        userconf.set("lastname", update.getCallbackQuery().getMessage().getFrom().getLastName());
+                }
+                try {
+                    userconf.save(file);
+                } catch (IOException e) {
+                    System.out.println("Error saving config file: " + e);
+                }
+            }
+        }
     }
 }

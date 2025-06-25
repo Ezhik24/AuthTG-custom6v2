@@ -15,10 +15,7 @@ public class MessageTranslationMC extends LinkedHashMap<String, String> {
         try {
             messageconfig.load(configfile);
         } catch (FileNotFoundException e) {
-            this.put("command_block","&f&l[&b&lMT&f&l] &c&lЭта команда доступна только для зарегистрированных пользователей!");
-            this.put("succes_login_account"," &f&l[&b&lMT&f&l] &a&lУспешный вход в аккаунт!");
-            this.put("rejected_login_account"," &f&l[&b&lMT&f&l] &c&lОтклонено Владельцем учетной записи из Телеграмма");
-            this.put("joinAnotherLocate", "&c&lКто-то уже играет с этого никнейма...");
+            this.put("link_account_code", "Напишите боту: @BotFather, и введите код: {CODE}");
             this.put("setbypass_player_noperm", "&f&l[&b&lMT&f&l] &c&lУ вас нет доступа");
             this.put("setbypass_player_wrongcmd", "&f&l[&b&lMT&f&l] &c&lКоманда введена неверна,введите: /setbypass <ник>");
             this.put("setbypass_player_approve", "&f&l[&b&lMT&f&l] &aДанный игрок не зарегистрирован,если вы действительно хотите выдать bypass введите команду еще раз");
@@ -45,13 +42,7 @@ public class MessageTranslationMC extends LinkedHashMap<String, String> {
         }
     }
 
-    public String getBanPlayerName(String playername, String reason, String time) {
-        return this.get("ban").replace("{PLAYER}", playername).replace("{REASON}", reason).replace("{TIME}", time);
-    }
-    public String getMutePlayerName(String playername, String reason, String time) {
-        return this.get("mute").replace("{PLAYER}", playername).replace("{REASON}", reason).replace("{TIME}", time);
-    }
-    public String getWarnPlayerName(String playername, String reason, String time) {
-        return this.get("warn").replace("{PLAYER}", playername).replace("{REASON}", reason).replace("{TIME}", time);
+    public String getLinkAccountCode(String code) {
+        return this.get("link_account_code").replace("{CODE}", code);
     }
 }

@@ -2,7 +2,6 @@ package org.ezhik.authtgem.message;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.ezhik.authtgem.User;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,11 +17,7 @@ public class MessageTranslationTG extends LinkedHashMap<String, String> {
             messageconfig.load(configfile);
         } catch (FileNotFoundException e) {
             this.put("account_choose", "Выберите игрока");
-            this.put("code_account_activated", "Ваш аккаунт успешно активирован!");
             this.put("code_account_activated_auth", "[Бот] Ваш аккаунт успешно активирован!");
-            this.put("login_who_entered","[Бот] Это вы вошли в игру?");
-            this.put("account_already_tgasign", "[Бот] Вы уже привязывали эту учетную запись");
-            this.put("account_already_tgasign_round", "[Бот] Эта учетная запись уже привязана к другой учетной записи Телегримма");
             this.put("acc_choose","[Бот] Выбран игрок {PLAYER}");
             File newconfigfile = new File("plugins/AuthTG/messages/messageTG_RU.yml");
             YamlConfiguration newmessageconfig = new YamlConfiguration();
@@ -43,10 +38,6 @@ public class MessageTranslationTG extends LinkedHashMap<String, String> {
         for (String key : messageconfig.getKeys(false)) {
             this.put(key, messageconfig.getString(key).replace("{BR}", "\n"));
         }
-    }
-
-    public String getPlayerNameSM(User user) {
-        return this.get("sendMessage_prefix").replace("{PLAYER}", user.playername);
     }
 
     public String getAccChoosePN(String playername) {

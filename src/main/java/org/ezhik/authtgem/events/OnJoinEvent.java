@@ -11,7 +11,6 @@ import org.ezhik.authtgem.Handler;
 import org.ezhik.authtgem.User;
 
 import java.io.File;
-import java.text.CompactNumberFormat;
 
 public class OnJoinEvent implements Listener {
     @EventHandler
@@ -24,7 +23,7 @@ public class OnJoinEvent implements Listener {
             if (user == null) {
                 String code = User.generateConfirmationCode();
                 if (BotTelegram.bedrockPlayer.containsKey(p.getUniqueId())) BotTelegram.bedrockPlayer.remove(p.getUniqueId());
-                Handler.kick(p.getName(), "Напишите боту: @BotFather, и введите код: " + code);
+                Handler.kick(p.getName(), AuthTGEM.messageMC.getLinkAccountCode(code));
                 BotTelegram.bedrockPlayer.put(p.getUniqueId(), code);
             }
         }
