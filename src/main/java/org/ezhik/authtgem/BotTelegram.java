@@ -76,6 +76,12 @@ public class BotTelegram extends TelegramLongPollingBot {
                         this.sendMessage(update.getMessage().getChatId(), "[Бот] Команда введена неверно. Введите /find [никнейм]");
                     }
                 }
+                if (update.getMessage().getText().toString().equals("/unlink")) {
+                    User user = User.getCurrentUser(update.getMessage().getChatId());
+                    File file = new File("plugins/AuthTG/" + user.uuid + ".yml");
+                    file.delete();
+                    this.sendMessage(update.getMessage().getChatId(), "[Бот] Аккаунт " + user.playername + " успешно удален!");
+                }
                 if (update.getMessage().getText().toString().equals("/accounts")) {
                     this.chosePlayer(update.getMessage().getChatId());
                 }
@@ -125,7 +131,7 @@ public class BotTelegram extends TelegramLongPollingBot {
 
     public void chosePlayer(Long chatID) {
         InlineKeyboardMarkup players = new InlineKeyboardMarkup();
-        List<String> playernames = User.getUserList(chatID);
+        List<String> playernames = User.getPlayerNames(chatID);
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         for (String name : playernames) {
             List<InlineKeyboardButton> colkeyb = new ArrayList<>();

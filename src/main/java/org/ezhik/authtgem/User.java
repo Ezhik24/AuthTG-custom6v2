@@ -78,18 +78,20 @@ public class User {
         }
     }
 
-    public static List<String> getUserList(Long chatid) {
-        List<String> names = new ArrayList<>();
-        File[] folder = new File("plugins/AuthTG/users/").listFiles();
-        for (File file : folder) {
-            User user = User.getUser(UUID.fromString(file.getName().replace(".yml", "")));
-            if (user != null) {
-                if (user.chatid.equals(chatid)) {
-                    names.add(user.playername);
+    public static List<User> getUserList(){
+        List<User> users = new ArrayList<>();
+        File folder = new File("plugins/Minetelegram/users");
+        File[] listOfFiles = folder.listFiles();
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                UUID uuid = UUID.fromString(file.getName().replace(".yml", ""));
+                User user = new User(uuid);
+                if (user.active) {
+                    users.add(user);
                 }
             }
         }
-        return names;
+        return users;
     }
 
     public static User getUser(UUID uuid) {
@@ -151,6 +153,30 @@ public class User {
                     System.out.println("Error saving config file: " + e);
                 }
             }
+        }
+    }
+    public static List<String> getPlayerNames(Long chatid) {
+        List<String> names = new ArrayList<>();
+        for (User user : User.getUserList()) {
+            if (user != null)
+                if (user.chatid.equals(chatid)) {
+                    names.add(user.playername);
+                }
+        }
+        return names;
+    }
+
+    public static User getCurrentUser(Long chatid){
+        if (BotTelegram.curentplayer.containsKey(chatid.toString())) {
+            return User.getUser(UUID.fromString(BotTelegram.curentplayer.get(chatid.toString())));
+        } else {
+            for (User user : User.getUserList()) {
+                if (user.chatid.equals(chatid)) {
+                    BotTelegram.curentplayer.put(chatid.toString(), user.playername);
+                    return user;
+                }
+            }
+            return null;
         }
     }
 }
