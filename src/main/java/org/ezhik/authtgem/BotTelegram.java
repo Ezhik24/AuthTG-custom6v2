@@ -81,6 +81,11 @@ public class BotTelegram extends TelegramLongPollingBot {
                     File file = new File("plugins/AuthTG/" + user.uuid + ".yml");
                     file.delete();
                     this.sendMessage(update.getMessage().getChatId(), "[Бот] Аккаунт " + user.playername + " успешно удален!");
+                    if (this.authNecessarily) {
+                        if (user.player != null) {
+                            Handler.kick(user.playername, "Вы отвязали аккаунт от телеграма.");
+                        }
+                    }
                 }
                 if (update.getMessage().getText().toString().equals("/accounts")) {
                     this.chosePlayer(update.getMessage().getChatId());
