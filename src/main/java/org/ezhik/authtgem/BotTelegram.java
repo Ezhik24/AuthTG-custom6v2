@@ -1,6 +1,7 @@
 package org.ezhik.authtgem;
 
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -10,42 +11,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import java.sql.SQLException;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class BotTelegram extends TelegramLongPollingBot {
-    private String username = "changeme";
-    private String token = "changeme";
+    private String username;
+    private String token;
     public static Map<String, String> curentplayer = new HashMap<>();
     public static Map<UUID,String> bedrockPlayer = new HashMap<>();
-    public boolean authNecessarily = false;
 
-    public BotTelegram() {
-        YamlConfiguration config = new YamlConfiguration();
-        File file = new File("plugins/AuthTG/config.yml");
-        if (!file.exists()) {
-            config.set("username", username);
-            config.set("token", token);
-            config.set("authNecessarily", authNecessarily);
-            try {
-                config.save(file);
-            } catch (Exception e) {
-                System.out.println("Error creating config file: " + e);
-            }
-        } else {
-            try {
-                config.load(file);
-            } catch (IOException e) {
-                System.out.println("Error loading config file: " + e);
-            } catch (InvalidConfigurationException e) {
-                System.out.println("Error loading config file: " + e);
-            }
-            username = config.getString("username");
-            token = config.getString("token");
-            authNecessarily = config.getBoolean("authNecessarily");
-        }
+    public BotTelegram(String username, String token) {
+        this.username = username;
+        this.token = token;
     }
 
     @Override
@@ -81,7 +60,7 @@ public class BotTelegram extends TelegramLongPollingBot {
                     File file = new File("plugins/AuthTG/" + user.uuid + ".yml");
                     file.delete();
                     this.sendMessage(update.getMessage().getChatId(), "[Бот] Аккаунт " + user.playername + " успешно удален!");
-                    if (this.authNecessarily) {
+                    if (AuthTGEM.config.getBoolean("authNecessarily")) {
                         if (user.player != null) {
                             Handler.kick(user.playername, "Вы отвязали аккаунт от телеграма.");
                         }
@@ -95,8 +74,19 @@ public class BotTelegram extends TelegramLongPollingBot {
                 if (!bedrockPlayer.isEmpty()) {
                     for (UUID map : bedrockPlayer.keySet()) {
                         if (update.getMessage().getText().toString().equals(bedrockPlayer.get(map))) {
-                            User.register(update.getMessage(),map);
-                            this.sendMessage(update.getMessage().getChatId() ,AuthTGEM.messageTG.get("code_account_activated_auth"));
+                            OfflinePlayer player = Bukkit.getOfflinePlayer(map);
+                            try {
+                                AuthTGEM.connector.setPlayerName(map, player.getName());
+                                AuthTGEM.connector.setActive(map, true);
+                                AuthTGEM.connector.setChatID(map, update.getMessage().getChatId());
+                                AuthTGEM.connector.setCurrentUUID(map, true);
+                                AuthTGEM.connector.setFirstName(map, update.getMessage().getFrom().getFirstName());
+                                AuthTGEM.connector.setLastName(map, update.getMessage().getFrom().getLastName());
+                                AuthTGEM.connector.setUsername(map, update.getMessage().getFrom().getUserName());
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                            this.sendMessage(update.getMessage().getChatId() ,"[Бот] Вы успешно привязали аккаунт!");
                         }
                     }
                 }
@@ -107,7 +97,7 @@ public class BotTelegram extends TelegramLongPollingBot {
             if (update.getCallbackQuery().getData().toString().startsWith("acc")) {
                 String playername = update.getCallbackQuery().getData().toString().replace("acc", "");
                 curentplayer.put(update.getCallbackQuery().getMessage().getChatId().toString(), playername);
-                this.sendMessage(update.getCallbackQuery().getMessage().getChatId(), AuthTGEM.messageTG.getAccChoosePN(playername));
+                this.sendMessage(update.getCallbackQuery().getMessage().getChatId(), "[Бот] Выбран аккаунт: " + playername);
             }
         }
     }
@@ -149,7 +139,7 @@ public class BotTelegram extends TelegramLongPollingBot {
         players.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID);
-        sendMessage.setText(AuthTGEM.messageTG.get("account_choose"));
+        sendMessage.setText("[Бот] Выберите аккаунт:");
         sendMessage.setReplyMarkup(players);
         try {
             this.execute(sendMessage);

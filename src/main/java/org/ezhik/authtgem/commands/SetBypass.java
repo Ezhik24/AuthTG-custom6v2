@@ -11,38 +11,31 @@ import org.ezhik.authtgem.AuthTGEM;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class SetBypass implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
         if (!player.hasPermission("minetelegram.setbypass")) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("setbypass_player_noperm")));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cУ вас недостаточно прав!"));
             return false;
         }
         if (strings[0] == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("setbypass_player_wrongcmd")));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cВы не указали ник!"));
             return false;
         }
         Player player1 = Bukkit.getPlayer(strings[0]);
-        File file = new File("plugins/AuthTG/users/" + player1.getUniqueId() + ".yml");
-        YamlConfiguration userconfig = YamlConfiguration.loadConfiguration(file);
-        userconfig.set("bypass", true);
-        if (!file.exists()) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.messageMC.get("setbypass_player_approve")));
-            try {
-                userconfig.save(file);
-            } catch (IOException e) {
-                System.out.println("Error saving file " + e);
-            }
+        if (player1 == null) {
+            commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cИгрок не онлайн!"));
             return false;
         }
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',AuthTGEM.messageMC.get("setbypass_player_success")));
         try {
-            userconfig.save(file);
-        } catch (IOException e) {
-            System.out.println("Error saving file " + e);
+            AuthTGEM.connector.setBypass(player1.getUniqueId(), true);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f&l[&c&lAuthTG&f&l] &cВы установили байпас для игрока &6" + player1.getName() + "&c!"));
         return true;
 
     }

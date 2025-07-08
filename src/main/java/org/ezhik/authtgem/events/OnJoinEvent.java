@@ -11,19 +11,18 @@ import org.ezhik.authtgem.Handler;
 import org.ezhik.authtgem.User;
 
 import java.io.File;
+import java.sql.SQLException;
 
 public class OnJoinEvent implements Listener {
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) throws SQLException {
         Player p = event.getPlayer();
         User user = User.getUser(p.getUniqueId());
-        File file = new File("plugins/AuthTG/users/" + p.getUniqueId() + ".yml");
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        if (AuthTGEM.bot.authNecessarily && !config.getBoolean("bypass")) {
+        if (AuthTGEM.config.getBoolean("authNecessarily") && !AuthTGEM.connector.isBypass(p.getUniqueId())) {
             if (user == null) {
                 String code = User.generateConfirmationCode();
                 if (BotTelegram.bedrockPlayer.containsKey(p.getUniqueId())) BotTelegram.bedrockPlayer.remove(p.getUniqueId());
-                Handler.kick(p.getName(), AuthTGEM.messageMC.getLinkAccountCode(code));
+                Handler.kick(p.getName(), "Напишите в бот @BotFather код привязки: " + code);
                 BotTelegram.bedrockPlayer.put(p.getUniqueId(), code);
             }
         }

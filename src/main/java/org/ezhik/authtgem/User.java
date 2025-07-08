@@ -1,17 +1,14 @@
 package org.ezhik.authtgem;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,27 +23,21 @@ public class User {
     public Player player = null;
     public  UUID uuid = null;
     public String playername = "";
+    public UUID currentuuid;
 
     private User(UUID uuid) {
-        YamlConfiguration userconfig = new YamlConfiguration();
-        File file = new File("plugins/AuthTG/users/" + uuid + ".yml");
         try {
-            userconfig.load(file);
             this.uuid = uuid;
-            this.playername = userconfig.getString("playername");
-            if(playername == null) playername = "";
-            this.chatid = userconfig.getLong("ChatID");
-            this.username = userconfig.getString("username");
-            this.firstname = userconfig.getString("firstname");
-            this.lastname = userconfig.getString("lastname");
+            this.chatid = AuthTGEM.connector.getChatID(uuid);
+            this.active = AuthTGEM.connector.isActive(uuid);
+            this.playername = AuthTGEM.connector.getPlayerName(uuid);
             this.player = Bukkit.getPlayer(uuid);
-            this.active = userconfig.getBoolean("active");
-        } catch (FileNotFoundException e) {
-            System.out.println("Error file not found: " + e);
-        } catch (IOException e) {
-            System.out.println("Error loading config file: " + e);
-        } catch (InvalidConfigurationException e) {
-            System.out.println("Error loading config file: " + e);
+            this.username = AuthTGEM.connector.getUsername(uuid);
+            this.firstname = AuthTGEM.connector.getFirstName(uuid);
+            this.lastname = AuthTGEM.connector.getLastName(uuid);
+            this.currentuuid = AuthTGEM.connector.getCurrentUUID(chatid);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -59,23 +50,6 @@ public class User {
             code.append(characters.charAt(randomIndex));
         }
         return code.toString();
-    }
-
-    public static void register(Message message, UUID uuid) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-        File file = new File("plugins/AuthTG/users/" + uuid + ".yml");
-        YamlConfiguration userconfig = YamlConfiguration.loadConfiguration(file);
-        userconfig.set("playername", player.getName());
-        userconfig.set("ChatID", message.getChatId());
-        userconfig.set("username", message.getChat().getUserName());
-        userconfig.set("firstname", message.getChat().getFirstName());
-        userconfig.set("lastname", message.getChat().getLastName());
-        userconfig.set("active", true);
-        try {
-            userconfig.save(file);
-        } catch (IOException e) {
-            System.out.println("Error saving config file: " + e);
-        }
     }
 
     public static List<User> getUserList(){
@@ -164,19 +138,5 @@ public class User {
                 }
         }
         return names;
-    }
-
-    public static User getCurrentUser(Long chatid){
-        if (BotTelegram.curentplayer.containsKey(chatid.toString())) {
-            return User.getUser(UUID.fromString(BotTelegram.curentplayer.get(chatid.toString())));
-        } else {
-            for (User user : User.getUserList()) {
-                if (user.chatid.equals(chatid)) {
-                    BotTelegram.curentplayer.put(chatid.toString(), user.playername);
-                    return user;
-                }
-            }
-            return null;
-        }
     }
 }

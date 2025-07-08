@@ -1,0 +1,11 @@
+mysql:
+  host: "localhost"
+  database: "test"
+  username: "root"
+  password: ""
+bot:
+  token: "changeme"
+  username: "changeme"
+authNecessarily: false
+messages:
+  minecraft:

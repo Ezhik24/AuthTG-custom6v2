@@ -17,7 +17,7 @@ public class LinkCMD implements CommandExecutor {
         if (user == null) {
             String code = User.generateConfirmationCode();
             if (BotTelegram.bedrockPlayer.containsKey(p.getUniqueId())) BotTelegram.bedrockPlayer.remove(p.getUniqueId());
-            Handler.kick(p.getName(), AuthTGEM.messageMC.getLinkAccountCode(code));
+            Handler.kick(p.getName(), "Напишите в бота @BotFather код привязки: " + code);
             BotTelegram.bedrockPlayer.put(p.getUniqueId(), code);
         }
         return true;
