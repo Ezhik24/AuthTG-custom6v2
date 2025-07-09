@@ -17,7 +17,7 @@ public class SetBypass implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
-        if (!player.hasPermission("minetelegram.setbypass")) {
+        if (!player.hasPermission("authtg.setbypass")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cУ вас недостаточно прав!"));
             return false;
         }
@@ -25,13 +25,8 @@ public class SetBypass implements CommandExecutor {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cВы не указали ник!"));
             return false;
         }
-        Player player1 = Bukkit.getPlayer(strings[0]);
-        if (player1 == null) {
-            commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cИгрок не онлайн!"));
-            return false;
-        }
-        AuthTGEM.connector.setBypass(player1.getUniqueId(), true);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f&l[&c&lAuthTG&f&l] &cВы установили байпас для игрока &6" + player1.getName() + "&c!"));
+        AuthTGEM.connector.setBypass(strings[0], true);
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f&l[&c&lAuthTG&f&l] &cВы установили байпас для игрока &6" + strings[0]));
         return true;
 
     }

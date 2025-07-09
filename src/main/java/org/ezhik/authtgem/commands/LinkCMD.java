@@ -16,6 +16,7 @@ public class LinkCMD implements CommandExecutor {
         Player p = (Player) commandSender;
         User user = User.getUser(p.getUniqueId());
         if (user == null) {
+            AuthTGEM.connector.setPlayerName(p.getUniqueId(), p.getName());
             String code = User.generateConfirmationCode();
             if (BotTelegram.bedrockPlayer.containsKey(p.getUniqueId())) BotTelegram.bedrockPlayer.remove(p.getUniqueId());
             Handler.kick(p.getName(), "Напишите в бота @BotFather код привязки: " + code);

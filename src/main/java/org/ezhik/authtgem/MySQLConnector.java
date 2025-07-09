@@ -51,21 +51,12 @@ public class MySQLConnector {
                     password
             );
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT * FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
+            stmt.executeUpdate(
+                    "INSERT IGNORE INTO AuthTGUsers (uuid, playername) VALUES ('" + uuid.toString() + "', '" + name + "')"
             );
-            if (!rs.next()) {
-                stmt.executeUpdate(
-                        "INSERT INTO AuthTGUsers (uuid, playername) VALUES ('" + uuid.toString() + "', '" + name + "')"
-                );
-            } else {
-                stmt.executeUpdate(
-                        "UPDATE AuthTGUsers SET playername = '" + name + "' WHERE uuid = '" + uuid.toString() + "'"
-                );
-            }
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setPlayername: " + e.getMessage());
         }
     }
     public void setActive(UUID uuid, boolean active) {
@@ -81,7 +72,7 @@ public class MySQLConnector {
             );
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setActive: " + e.getMessage());
         }
     }
     public void setChatID(UUID uuid, long chatid) {
@@ -97,10 +88,10 @@ public class MySQLConnector {
             );
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setChatID: " + e.getMessage());
         }
     }
-    public void setUsername(UUID uuid, String username)  {
+    public void setUsername(UUID uuid, String user)  {
         try {
             conn = DriverManager.getConnection(
                     "jdbc:mysql://" + host + "/" + database,
@@ -109,11 +100,11 @@ public class MySQLConnector {
             );
             stmt = conn.createStatement();
             stmt.executeUpdate(
-                    "UPDATE AuthTGUsers SET username = '" + username + "' WHERE uuid = '" + uuid.toString() + "'"
+                    "UPDATE AuthTGUsers SET username = '" + user + "' WHERE uuid = '" + uuid.toString() + "'"
             );
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setUsername: " + e.getMessage());
         }
     }
     public void setCurrentUUID(UUID uuid, Long chatid){
@@ -132,10 +123,10 @@ public class MySQLConnector {
             );
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setCurrentUUID: " + e.getMessage());
         }
     }
-    public void setBypass(UUID uuid, boolean bypass) {
+    public void setBypass(String playername, boolean bypass) {
         try {
             conn = DriverManager.getConnection(
                     "jdbc:mysql://" + host + "/" + database,
@@ -143,21 +134,12 @@ public class MySQLConnector {
                     password
             );
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT * FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
+            stmt.executeUpdate(
+                    "UPDATE AuthTGUsers SET bypass = " + bypass + " WHERE playername = '" + playername + "'"
             );
-            if (!rs.next()) {
-                stmt.executeUpdate(
-                        "INSERT INTO AuthTGUsers (uuid, bypass) VALUES ('" + uuid.toString() + "', " + bypass + ")"
-                );
-            } else {
-                stmt.executeUpdate(
-                        "UPDATE AuthTGUsers SET bypass = " + bypass + " WHERE uuid = '" + uuid.toString() + "'"
-                );
-            }
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setBypass: " + e.getMessage());
         }
     }
     public void setFirstName(UUID uuid, String firstname) {
@@ -173,7 +155,7 @@ public class MySQLConnector {
             );
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setFirstName: " + e.getMessage());
         }
     }
     public void setLastName(UUID uuid, String lastname){
@@ -189,7 +171,7 @@ public class MySQLConnector {
             );
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setLastName: " + e.getMessage());
         }
     }
 
@@ -204,10 +186,12 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT playername FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
             );
+            if (rs.next()) {
+                return rs.getString("playername");
+            }
             conn.close();
-            return rs.getString("playername");
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getPlayerName: " + e.getMessage());
         }
         return null;
     }
@@ -222,10 +206,12 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT active FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
             );
+            if (rs.next()) {
+                return rs.getBoolean("active");
+            }
             conn.close();
-            return rs.getBoolean("active");
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("isActive: " + e.getMessage());
         }
         return false;
     }
@@ -240,10 +226,12 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT chatid FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
             );
+            if (rs.next()) {
+                return rs.getLong("chatid");
+            }
             conn.close();
-            return rs.getLong("chatid");
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getChatID: " + e.getMessage());
         }
         return 0;
     }
@@ -258,10 +246,12 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT username FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
             );
+            if (rs.next()) {
+                return rs.getString("username");
+            }
             conn.close();
-            return rs.getString("username");
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getUsername: " + e.getMessage());
         }
         return null;
     }
@@ -274,7 +264,7 @@ public class MySQLConnector {
             );
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(
-                    "SELECT uuid FROM AuthTGUsers WHERE chatid = '" + chatid + "'"
+                    "SELECT * FROM AuthTGUsers WHERE chatid = '" + chatid + "'"
             );
             if (rs.next()) {
                 if (rs.getBoolean("currentUUID")) {
@@ -283,7 +273,7 @@ public class MySQLConnector {
             }
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getCurrentUUID: " + e.getMessage());
         }
         return null;
     }
@@ -298,10 +288,10 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT bypass FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
             );
+            if (rs.next()) return rs.getBoolean("bypass");
             conn.close();
-            return rs.getBoolean("bypass");
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("isBypass: " + e.getMessage());
         }
         return false;
     }
@@ -316,10 +306,12 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT firstname FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
             );
+            if (rs.next()) {
+                return rs.getString("firstname");
+            }
             conn.close();
-            return rs.getString("firstname");
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getFirstName: " + e.getMessage());
         }
         return null;
     }
@@ -334,10 +326,12 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT lastname FROM AuthTGUsers WHERE uuid = '" + uuid.toString() + "'"
             );
+            if (rs.next()) {
+                return rs.getString("lastname");
+            }
             conn.close();
-            return rs.getString("lastname");
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getLastName: " + e.getMessage());
         }
         return null;
     }
@@ -352,10 +346,12 @@ public class MySQLConnector {
             ResultSet rs = stmt.executeQuery(
                     "SELECT uuid FROM AuthTGUsers WHERE playername = '" + playername + "'"
             );
+            if (rs.next()) {
+                return UUID.fromString(rs.getString("uuid"));
+            }
             conn.close();
-            return UUID.fromString(rs.getString("uuid"));
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getUUID: " + e.getMessage());
         }
         return null;
     }
@@ -378,7 +374,7 @@ public class MySQLConnector {
             conn.close();
             return playernames;
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("getPlayerNames: " + e.getMessage());
         }
         return null;
     }
@@ -396,7 +392,7 @@ public class MySQLConnector {
             );
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("deletePlayer: " + e.getMessage());
         }
     }
 
@@ -407,6 +403,7 @@ public class MySQLConnector {
                     username,
                     password
             );
+            arg = arg.replace("@", "");
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(
                     "SELECT * FROM AuthTGUsers WHERE firstname = '" + arg + "' OR username = '" + arg + "' OR playername = '" + arg + "'"
@@ -416,7 +413,7 @@ public class MySQLConnector {
             }
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("findUser: " + e.getMessage());
         }
         return null;
     }
@@ -451,7 +448,7 @@ public class MySQLConnector {
             }
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setUserMessage: " + e.getMessage());
         }
     }
 
@@ -485,7 +482,7 @@ public class MySQLConnector {
             }
             conn.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("setUserCallback: " + e.getMessage());
         }
     }
 }

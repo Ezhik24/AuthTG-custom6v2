@@ -43,7 +43,7 @@ public class BotTelegram extends TelegramLongPollingBot {
                     if (args.length == 2) {
                         User user = AuthTGEM.connector.findUser(args[1]);
                         if (user != null) {
-                            this.sendMessage(update.getMessage().getChatId(), "[Бот] Найдено по вашему запросу: \nНикнейм: " + user.playername + "\nUserName: " + user.username + "\nFirstname: " + user.firstname);
+                            this.sendMessage(update.getMessage().getChatId(), "[Бот] Найдено по вашему запросу: \nНикнейм: " + user.playername + "\nUserName: @" + user.username + "\nFirstname: " + user.firstname);
                         } else {
                             this.sendMessage(update.getMessage().getChatId(), "[Бот] Не найдено ничего по запросу " + args[1]);
                         }
@@ -70,8 +70,6 @@ public class BotTelegram extends TelegramLongPollingBot {
                 if (!bedrockPlayer.isEmpty()) {
                     for (UUID uuid : bedrockPlayer.keySet()) {
                         if (update.getMessage().getText().toString().equals(bedrockPlayer.get(uuid))) {
-                            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-                            AuthTGEM.connector.setPlayerName(uuid, player.getName());
                             AuthTGEM.connector.setActive(uuid, true);
                             AuthTGEM.connector.setChatID(uuid, update.getMessage().getChatId());
                             AuthTGEM.connector.setCurrentUUID(uuid, update.getMessage().getChatId());

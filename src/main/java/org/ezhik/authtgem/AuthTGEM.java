@@ -25,9 +25,8 @@ public final class AuthTGEM extends JavaPlugin {
         try {
             connector = new MySQLConnector(config.getString("mysql.host"),config.getString("mysql.database"),config.getString("mysql.username"),config.getString("mysql.password"));
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("[AuthTG] MySQL connection error: " + e.getMessage());
         }
-        System.out.println("[AuthTG] Plugin enabled!");
         Bukkit.getServer().getPluginManager().registerEvents(new OnJoinEvent(), this);
         Handler handler = new Handler();
         handler.runTaskTimer(this,0,1);
@@ -48,7 +47,5 @@ public final class AuthTGEM extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
-        System.out.println("[AuthTG] Plugin disabled!");
-    }
+    public void onDisable() {}
 }
