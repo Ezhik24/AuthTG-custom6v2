@@ -1,5 +1,6 @@
 package org.ezhik.authtgem.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +20,10 @@ public class LinkCMD implements CommandExecutor {
             if (BotTelegram.bedrockPlayer.containsKey(p.getUniqueId())) BotTelegram.bedrockPlayer.remove(p.getUniqueId());
             Handler.kick(p.getName(), "Напишите в бота @BotFather код привязки: " + code);
             BotTelegram.bedrockPlayer.put(p.getUniqueId(), code);
+            return true;
+        } else {
+            commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cВы уже привязали к аккаунту!"));
+            return false;
         }
-        return true;
     }
 }

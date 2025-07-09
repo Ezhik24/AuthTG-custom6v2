@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 public class OnJoinEvent implements Listener {
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) throws SQLException {
+    public void onJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         User user = User.getUser(p.getUniqueId());
         if (AuthTGEM.config.getBoolean("authNecessarily") && !AuthTGEM.connector.isBypass(p.getUniqueId())) {

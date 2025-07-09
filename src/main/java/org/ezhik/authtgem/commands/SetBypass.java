@@ -30,11 +30,7 @@ public class SetBypass implements CommandExecutor {
             commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cИгрок не онлайн!"));
             return false;
         }
-        try {
-            AuthTGEM.connector.setBypass(player1.getUniqueId(), true);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        AuthTGEM.connector.setBypass(player1.getUniqueId(), true);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f&l[&c&lAuthTG&f&l] &cВы установили байпас для игрока &6" + player1.getName() + "&c!"));
         return true;
 
