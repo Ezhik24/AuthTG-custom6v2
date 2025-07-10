@@ -9,3 +9,16 @@ bot:
 authNecessarily: false
 messages:
   minecraft:
+    linktext: "Напишите в бота @BotFather код привязки: {CODE}"
+    nopermbypass: "&f&l[&c&lAuthTG&f&l] &cУ вас недостаточно прав!"
+    noargsbypass: "&f&l[&c&lAuthTG&f&l] &cВы не указали ник!"
+    bypassset: "&f&l[&c&lAuthTG&f&l] &cВы установили байпас для игрока &6{PLAYER}"
+  telegram:
+    accchose: "[Бот] Выберите аккаунт:"
+    accset: "[Бот] Выбран аккаунт: {PLAYER}"
+    linked: "[Бот] Вы успешно привязали аккаунт!"
+    kickunlink: "Вы отвязали аккаунт от телеграма."
+    unlinked: "[Бот] Аккаунт {PLAYER} успешно удален!"
+    findusage: "[Бот] Команда введена неверно. Введите /find [никнейм]"
+    findnotfound: "[Бот] Не найдено ничего по запросу: {ARG}"
+    findfound: "[Бот] Найдено по вашему запросу: {BR} Никнейм: {PLAYERNAME} {BR} UserName: @{USERNAME} {BR} Firstname: {FIRSTNAME}"

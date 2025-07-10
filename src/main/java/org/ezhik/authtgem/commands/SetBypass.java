@@ -18,15 +18,16 @@ public class SetBypass implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
         if (!player.hasPermission("authtg.setbypass")) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cУ вас недостаточно прав!"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.config.getString("messages.minecraft.nopermbypass")));
             return false;
         }
-        if (strings[0] == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f&l[&c&lAuthTG&f&l] &cВы не указали ник!"));
+        String message = String.join(" ", strings);
+        if (message.isEmpty()) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', AuthTGEM.config.getString("messages.minecraft.noargsbypass")));
             return false;
         }
         AuthTGEM.connector.setBypass(strings[0], true);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f&l[&c&lAuthTG&f&l] &cВы установили байпас для игрока &6" + strings[0]));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',AuthTGEM.config.getString("messages.minecraft.bypassset").replace("{PLAYER}", strings[0])));
         return true;
 
     }

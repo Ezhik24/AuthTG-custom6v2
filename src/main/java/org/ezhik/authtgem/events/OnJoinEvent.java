@@ -18,7 +18,7 @@ public class OnJoinEvent implements Listener {
             if (!AuthTGEM.connector.isActive(p.getUniqueId())) {
                 String code = User.generateConfirmationCode();
                 if (BotTelegram.bedrockPlayer.containsKey(p.getUniqueId())) BotTelegram.bedrockPlayer.remove(p.getUniqueId());
-                Handler.kick(p.getName(), "Напишите в бот @BotFather код привязки: " + code);
+                Handler.kick(p.getName(), AuthTGEM.config.getString("messages.minecraft.linktext").replace("{CODE}", code));
                 BotTelegram.bedrockPlayer.put(p.getUniqueId(), code);
             }
         }

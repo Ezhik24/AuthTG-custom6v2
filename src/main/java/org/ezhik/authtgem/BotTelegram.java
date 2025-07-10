@@ -43,21 +43,21 @@ public class BotTelegram extends TelegramLongPollingBot {
                     if (args.length == 2) {
                         User user = AuthTGEM.connector.findUser(args[1]);
                         if (user != null) {
-                            this.sendMessage(update.getMessage().getChatId(), "[Бот] Найдено по вашему запросу: \nНикнейм: " + user.playername + "\nUserName: @" + user.username + "\nFirstname: " + user.firstname);
+                            this.sendMessage(update.getMessage().getChatId(), AuthTGEM.config.getString("messages.telegram.findfound").replace("{PLAYERNAME}", user.playername).replace("{USERNAME}", user.username).replace("{FIRSTNAME}", user.firstname).replace("{BR}", "\n"));
                         } else {
-                            this.sendMessage(update.getMessage().getChatId(), "[Бот] Не найдено ничего по запросу " + args[1]);
+                            this.sendMessage(update.getMessage().getChatId(), AuthTGEM.config.getString("messages.telegram.findnotfound").replace("{ARG}", args[1]));
                         }
                     } else {
-                        this.sendMessage(update.getMessage().getChatId(), "[Бот] Команда введена неверно. Введите /find [никнейм]");
+                        this.sendMessage(update.getMessage().getChatId(), AuthTGEM.config.getString("messages.telegram.findusage"));
                     }
                 }
                 if (update.getMessage().getText().toString().equals("/unlink")) {
                     UUID uuid  = AuthTGEM.connector.getCurrentUUID(update.getMessage().getChatId());
                     User user = User.getUser(uuid);
-                    this.sendMessage(update.getMessage().getChatId(), "[Бот] Аккаунт " + user.playername + " успешно удален!");
+                    this.sendMessage(update.getMessage().getChatId(), AuthTGEM.config.getString("messages.telegram.unlinked").replace("{PLAYER}", user.playername));
                     if (AuthTGEM.config.getBoolean("authNecessarily")) {
                         if (user.player != null) {
-                            Handler.kick(user.playername, "Вы отвязали аккаунт от телеграма.");
+                            Handler.kick(user.playername, AuthTGEM.config.getString("messages.telegram.kickunlink"));
                         }
                     }
                     AuthTGEM.connector.deletePlayer(uuid);
@@ -76,7 +76,7 @@ public class BotTelegram extends TelegramLongPollingBot {
                             AuthTGEM.connector.setFirstName(uuid, update.getMessage().getFrom().getFirstName());
                             AuthTGEM.connector.setLastName(uuid, update.getMessage().getFrom().getLastName());
                             AuthTGEM.connector.setUsername(uuid, update.getMessage().getFrom().getUserName());
-                            this.sendMessage(update.getMessage().getChatId() ,"[Бот] Вы успешно привязали аккаунт!");
+                            this.sendMessage(update.getMessage().getChatId() ,AuthTGEM.config.getString("messages.telegram.linked"));
                         }
                     }
                 }
@@ -88,7 +88,7 @@ public class BotTelegram extends TelegramLongPollingBot {
                 String playername = update.getCallbackQuery().getData().toString().replace("acc", "");
                 UUID uuid = AuthTGEM.connector.getUUID(playername);
                 AuthTGEM.connector.setCurrentUUID(uuid, update.getCallbackQuery().getMessage().getChatId());
-                this.sendMessage(update.getCallbackQuery().getMessage().getChatId(), "[Бот] Выбран аккаунт: " + playername);
+                this.sendMessage(update.getCallbackQuery().getMessage().getChatId(), AuthTGEM.config.getString("messages.telegram.accset").replace("{PLAYER}", playername));
             }
         }
     }
@@ -130,7 +130,7 @@ public class BotTelegram extends TelegramLongPollingBot {
         players.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatID);
-        sendMessage.setText("[Бот] Выберите аккаунт:");
+        sendMessage.setText(AuthTGEM.config.getString("messages.telegram.accchose"));
         sendMessage.setReplyMarkup(players);
         try {
             this.execute(sendMessage);
